@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        header {
+            background: #14213d;
+            color: white;
+            padding: 22px 7%;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 27px;
+        }
+
+        header p {
+            margin: 7px 0 0;
+            color: #cbd5e1;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .card,
+        .panel {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 18px rgba(20, 33, 61, 0.06);
+        }
+
+        .card p {
+            margin: 0 0 12px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .panel {
+            margin-bottom: 22px;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d7deea;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 75px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        #message {
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        .goal {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px;
+            margin-top: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .goal-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .goal h3 {
+            margin: 0 0 8px;
+        }
+
+        .muted {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .progress-track {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 14px 0 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #16a34a;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .empty {
+            color: #64748b;
+            padding: 12px 0;
+        }
+
+        .delete-button {
+            background: #dc2626;
+            margin-top: 10px;
+        }
+
+        .edit-form {
+            display: none;
+            margin-top: 14px;
+            padding: 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .cancel-button {
+            background: #64748b;
+            margin-left: 8px;
+        }
+
+        .savings-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .ai-button {
+            background: #6d28d9;
+            margin-top: 12px;
+            margin-right: 10px;
+        }
+
+        .ai-advice {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            border: 1px solid #ddd6fe;
+            border-radius: 10px;
+            background: #f5f3ff;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .ai-advice h4 {
+            margin: 0 0 8px;
+            color: #5b21b6;
+        }
+
+        .ai-advice p {
+            margin: 6px 0;
+        }
+
+        .savings-controls input {
+            max-width: 240px;
+            flex: 1 1 180px;
+        }
+
+        /* Transaction history */
+        .transaction-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        .transaction-table {
+            width: 100%;
+            min-width: 620px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .transaction-table th,
+        .transaction-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .transaction-table th {
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        .transaction-amount {
+            color: #15803d;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .transaction-id {
+            max-width: 140px;
+            overflow-wrap: anywhere;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .transaction-empty {
+            color: #64748b;
+            padding: 12px 0;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            main {
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .card,
+            .panel {
+                padding: 17px;
+            }
+
+            .summary {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .card h2 {
+                font-size: 20px;
+                overflow-wrap: anywhere;
+            }
+
+            button {
+                padding: 11px 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>SaveIQ</h1>
+        <p>Your smart savings goal tracker</p>
+    </header>
+
+    <main>
+
+        <!-- Dashboard Summary -->
+        <section class="summary">
+            <div class="card">
+                <p>Total Goals</p>
+                <h2 id="totalGoals">0</h2>
+            </div>
+
+            <div class="card">
+                <p>Total Target</p>
+                <h2 id="totalTarget">₹0</h2>
+            </div>
+
+            <div class="card">
+                <p>Total Saved</p>
+                <h2 id="totalSaved">₹0</h2>
+            </div>
+
+            <div class="card">
+                <p>Overall Progress</p>
+                <h2 id="overallProgress">0%</h2>
+            </div>
+        </section>
+
+        <!-- Create Goal Form -->
+        <section class="panel">
+            <h2>Create a Savings Goal</h2>
+
+            <form id="goalForm">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="name">Goal name *</label>
+                        <input id="name" type="text" required maxlength="100" placeholder="e.g. Buy a laptop">
+                    </div>
+
+                    <div class="field">
+                        <label for="targetAmount">Target amount (₹) *</label>
+                        <input id="targetAmount" type="number" required min="0.01" step="0.01" placeholder="50000">
+                    </div>
+
+                    <div class="field">
+                        <label for="initialSavings">Already saved (₹)</label>
+                        <input id="initialSavings" type="number" min="0" step="0.01" value="0">
+                    </div>
+
+                    <div class="field">
+                        <label for="deadline">Deadline *</label>
+                        <input id="deadline" type="date" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email for reminders (optional)</label>
+                        <input id="email" type="email" placeholder="you@example.com">
+                    </div>
+
+                    <div class="field">
+                        <label for="purpose">Purpose (optional)</label>
+                        <input id="purpose" type="text" maxlength="300" placeholder="Why are you saving?">
+                    </div>
+                </div>
+
+                <button id="submitButton" type="submit">
+                    Create Goal
+                </button>
+
+                <p id="message" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <!-- Savings Goals List -->
+        <section class="panel">
+            <h2>Your Savings Goals</h2>
+            <div id="goalsList" aria-live="polite">
+                Loading your goals...
+            </div>
+        </section>
+
+        <!-- Transaction History -->
+        <section class="panel">
+            <h2>Transaction History</h2>
+            <p class="muted">
+                Review deposits recorded for your savings goals.
+                The newest transactions appear first.
+            </p>
+
+            <div id="transactionsList" aria-live="polite">
+                Loading transaction history...
+            </div>
+
+            <button id="refreshTransactionsButton" type="button" style="margin-top: 14px;">
+                Refresh History
+            </button>
+        </section>
+
+    </main>
+
+    <footer>
+        SaveIQ · Take control of your savings
+    </footer>
+
+    <script>
+        // Format numbers as Indian Rupees.
+        const money = amount =>
+            new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+                maximumFractionDigits: 2
+            }).format(Number(amount) || 0);
+
+
+        // Display a message below the Create Goal form.
+        function showMessage(text, isError) {
+            const element = document.getElementById("message");
+
+            element.textContent = text;
+            element.style.color = isError ? "#b91c1c" : "#15803d";
+        }
+
+
+        // Load savings goals from Google Sheets.
+        function loadGoals() {
+            const list = document.getElementById("goalsList");
+
+            list.textContent = "Loading your goals...";
+            list.className = "";
+
+            google.script.run
+                .withSuccessHandler(renderGoals)
+                .withFailureHandler(error => {
+                    list.textContent =
+                        "Could not load goals: " +
+                        (error.message || "Unknown error");
+                })
+                .getGoals();
+        }
+
+
+        // Update dashboard statistics and render each goal.
+        function renderGoals(goals) {
+            const list = document.getElementById("goalsList");
+
+            list.replaceChildren();
+
+            const totalTarget = goals.reduce(
+                (sum, goal) =>
+                    sum + (Number(goal.targetAmount) || 0),
+                0
+            );
+
+            const totalSaved = goals.reduce(
+                (sum, goal) =>
+                    sum + (Number(goal.currentSavings) || 0),
+                0
+            );
+
+            const percentage = totalTarget > 0
+                ? Math.min(
+                    100,
+                    Math.round(totalSaved / totalTarget * 100)
+                )
+                : 0;
+
+            document.getElementById("totalGoals").textContent =
+                goals.length;
+
+            document.getElementById("totalTarget").textContent =
+                money(totalTarget);
+
+            document.getElementById("totalSaved").textContent =
+                money(totalSaved);
+
+            document.getElementById("overallProgress").textContent =
+                percentage + "%";
+
+
+            // Empty state.
+            if (!goals.length) {
+                list.textContent =
+                    "No goals yet. Create your first goal above.";
+
+                list.className = "empty";
+                return;
+            }
+
+            list.className = "";
+
+
+            // Render every savings goal.
+            goals.forEach(goal => {
+                const target = Number(goal.targetAmount) || 0;
+                const saved = Number(goal.currentSavings) || 0;
+
+                const progress = target > 0
+                    ? Math.min(
+                        100,
+                        Math.max(0, saved / target * 100)
+                    )
+                    : 0;
+
+
+                // Goal card.
+                const card = document.createElement("article");
+                card.className = "goal";
+
+
+                // Goal heading and status.
+                const top = document.createElement("div");
+                top.className = "goal-top";
+
+                const heading = document.createElement("h3");
+                heading.textContent = goal.name;
+
+                const status = document.createElement("span");
+                status.className = "muted";
+                status.textContent = goal.status || "Active";
+
+                top.append(heading, status);
+
+
+                // Savings amount.
+                const amounts = document.createElement("p");
+
+                amounts.textContent =
+                    money(saved) + " saved of " + money(target);
+
+
+                // Progress bar.
+                const track = document.createElement("div");
+                track.className = "progress-track";
+
+                const bar = document.createElement("div");
+                bar.className = "progress-bar";
+                bar.style.width = progress + "%";
+
+                track.appendChild(bar);
+
+
+                // Deadline and progress details.
+                const details = document.createElement("p");
+                details.className = "muted";
+
+                details.textContent =
+                    "Progress: " +
+                    progress.toFixed(1) +
+                    "% · Deadline: " +
+                    (goal.deadline || "Not set");
+
+                card.append(top, amounts, track, details);
+
+
+                // AI SAVINGS ADVICE
+                const aiButton = document.createElement("button");
+                aiButton.type = "button";
+                aiButton.className = "ai-button";
+                aiButton.textContent = "✨ AI Savings Advice";
+
+                const aiAdvice = document.createElement("div");
+                aiAdvice.className = "ai-advice";
+                aiAdvice.setAttribute("role", "status");
+                aiAdvice.setAttribute("aria-live", "polite");
+
+                aiButton.addEventListener("click", () => {
+                    aiAdvice.style.display = "block";
+                    aiAdvice.textContent =
+                        "Generating personalized savings advice...";
+
+                    aiButton.disabled = true;
+                    aiButton.textContent = "Generating advice...";
+
+                    google.script.run
+                        .withSuccessHandler(response => {
+                            aiButton.disabled = false;
+                            aiButton.textContent = "✨ AI Savings Advice";
+
+                            if (
+                                !response ||
+                                !response.success ||
+                                !response.advice
+                            ) {
+                                aiAdvice.textContent =
+                                    "The AI did not return a recommendation. Please try again.";
+                                return;
+                            }
+
+                            aiAdvice.replaceChildren();
+
+                            const title = document.createElement("h4");
+                            title.textContent = "Your SaveIQ AI Savings Plan";
+
+                            const metrics = document.createElement("p");
+                            metrics.textContent =
+                                "Remaining: " + money(response.remaining) +
+                                " · Daily target: " + money(response.dailySavings) +
+                                " · Days remaining: " + response.daysLeft;
+
+                            const adviceText = document.createElement("p");
+                            adviceText.textContent = response.advice;
+
+                            aiAdvice.append(title, metrics, adviceText);
+                        })
+                        .withFailureHandler(error => {
+                            aiButton.disabled = false;
+                            aiButton.textContent = "✨ AI Savings Advice";
+
+                            aiAdvice.textContent =
+                                (error && error.message)
+                                    ? "Could not generate advice: " + error.message
+                                    : "Could not generate advice. Please try again.";
+                        })
+                        .getAIRecommendations({
+                            name: goal.name,
+                            targetAmount: goal.targetAmount,
+                            currentSavings: goal.currentSavings,
+                            deadline: goal.deadline,
+                            purpose: goal.purpose
+                        });
+                });
+
+                card.append(aiButton, aiAdvice);
+
+
+                // Purpose.
+                if (goal.purpose) {
+                    const purpose = document.createElement("p");
+
+                    purpose.className = "muted";
+                    purpose.textContent = "Purpose: " + goal.purpose;
+
+                    card.appendChild(purpose);
+                }
+
+
+                // EDIT GOAL
+                const editButton = document.createElement("button");
+
+                editButton.type = "button";
+                editButton.textContent = "Edit Goal";
+                editButton.style.marginTop = "10px";
+                editButton.style.marginRight = "10px";
+
+
+                // Hidden edit form.
+                const editForm = document.createElement("form");
+                editForm.className = "edit-form";
+
+                const editGrid = document.createElement("div");
+                editGrid.className = "form-grid";
+
+
+                // Helper to create edit fields.
+                function addEditField(
+                    labelText,
+                    inputType,
+                    value,
+                    fieldName
+                ) {
+                    const field = document.createElement("div");
+                    field.className = "field";
+
+                    const label = document.createElement("label");
+                    label.textContent = labelText;
+
+                    const input = document.createElement("input");
+
+                    input.type = inputType;
+                    input.value = value == null ? "" : value;
+                    input.name = fieldName;
+
+                    input.required = [
+                        "name",
+                        "targetAmount",
+                        "deadline"
+                    ].includes(fieldName);
+
+                    if (fieldName === "name") {
+                        input.maxLength = 100;
+                    }
+
+                    if (fieldName === "targetAmount") {
+                        input.min = "0.01";
+                        input.step = "0.01";
+                    }
+
+                    if (fieldName === "purpose") {
+                        input.maxLength = 300;
+                    }
+
+                    label.htmlFor =
+                        "edit-" + fieldName + "-" + goal.id;
+
+                    input.id = label.htmlFor;
+
+                    field.append(label, input);
+                    editGrid.appendChild(field);
+
+                    return input;
+                }
+
+                // Edit form fields.
+                const editName = addEditField(
+                    "Goal name *",
+                    "text",
+                    goal.name,
+                    "name"
+                );
+
+                const editTarget = addEditField(
+                    "Target amount (₹) *",
+                    "number",
+                    target,
+                    "targetAmount"
+                );
+
+                const editDeadline = addEditField(
+                    "Deadline *",
+                    "date",
+                    goal.deadline,
+                    "deadline"
+                );
+
+                const editEmail = addEditField(
+                    "Email for reminders",
+                    "email",
+                    goal.email,
+                    "email"
+                );
+
+                const editPurpose = addEditField(
+                    "Purpose",
+                    "text",
+                    goal.purpose,
+                    "purpose"
+                );
+
+
+                // Edit information note.
+                const editNote = document.createElement("p");
+
+                editNote.className = "muted";
+
+                editNote.textContent =
+                    "Your current savings will be preserved. " +
+                    "The target cannot be lower than the amount already saved.";
+
+
+                // Save changes button.
+                const saveEditButton = document.createElement("button");
+
+                saveEditButton.type = "submit";
+                saveEditButton.textContent = "Save Changes";
+
+
+                // Cancel button.
+                const cancelEditButton = document.createElement("button");
+
+                cancelEditButton.type = "button";
+                cancelEditButton.textContent = "Cancel";
+                cancelEditButton.className = "cancel-button";
+
+
+                editForm.append(
+                    editGrid,
+                    editNote,
+                    saveEditButton,
+                    cancelEditButton
+                );
+
+
+                // Toggle edit form.
+                editButton.addEventListener("click", () => {
+                    const isHidden =
+                        getComputedStyle(editForm).display === "none";
+
+                    editForm.style.display = isHidden ? "block" : "none";
+                });
+
+
+                // Cancel editing.
+                cancelEditButton.addEventListener("click", () => {
+                    editForm.style.display = "none";
+                });
+
+
+                // Submit edited goal.
+                editForm.addEventListener("submit", event => {
+                    event.preventDefault();
+
+                    const updatedGoal = {
+                        name: editName.value.trim(),
+                        targetAmount: editTarget.value,
+                        deadline: editDeadline.value,
+                        email: editEmail.value.trim(),
+                        purpose: editPurpose.value.trim()
+                    };
+
+
+                    if (!updatedGoal.name) {
+                        alert("Please enter a goal name.");
+                        return;
+                    }
+
+
+                    if (
+                        !Number.isFinite(Number(updatedGoal.targetAmount)) ||
+                        Number(updatedGoal.targetAmount) <= 0
+                    ) {
+                        alert("Target amount must be greater than zero.");
+                        return;
+                    }
+
+
+                    if (Number(updatedGoal.targetAmount) < saved) {
+                        alert(
+                            "Target amount cannot be lower than your " +
+                            "current savings of " + money(saved) + "."
+                        );
+                        return;
+                    }
+
+
+                    if (!updatedGoal.deadline) {
+                        alert("Please select a deadline.");
+                        return;
+                    }
+
+
+                    saveEditButton.disabled = true;
+                    saveEditButton.textContent = "Saving...";
+
+
+                    google.script.run
+                        .withSuccessHandler(result => {
+                            alert(
+                                result.message ||
+                                "Savings goal updated successfully."
+                            );
+
+                            loadGoals();
+                        })
+                        .withFailureHandler(error => {
+                            alert(
+                                error.message ||
+                                "Could not update this goal."
+                            );
+
+                            saveEditButton.disabled = false;
+                            saveEditButton.textContent = "Save Changes";
+                        })
+                        .editGoal(goal.id, updatedGoal);
+                });
+
+
+                card.appendChild(editButton);
+                card.appendChild(editForm);
+
+
+                // ADD SAVINGS
+                const savingsControls = document.createElement("div");
+
+                savingsControls.className = "savings-controls";
+
+
+                const savingsInput = document.createElement("input");
+
+                savingsInput.type = "number";
+                savingsInput.min = "0.01";
+                savingsInput.step = "0.01";
+                savingsInput.placeholder = "Amount to save (₹)";
+
+                savingsInput.setAttribute(
+                    "aria-label",
+                    "Amount to save"
+                );
+
+
+                const savingsButton = document.createElement("button");
+
+                savingsButton.type = "button";
+                savingsButton.textContent = "Add Savings";
+
+
+                savingsButton.addEventListener("click", () => {
+                    const amount = Number(savingsInput.value);
+
+
+                    if (!Number.isFinite(amount) || amount <= 0) {
+                        alert("Enter an amount greater than zero.");
+                        return;
+                    }
+
+
+                    savingsButton.disabled = true;
+                    savingsButton.textContent = "Adding...";
+
+
+                    google.script.run
+                        .withSuccessHandler(result => {
+                            alert(
+                                result.message ||
+                                "Savings added successfully."
+                            );
+
+                            savingsInput.value = "";
+                            savingsButton.disabled = false;
+                            savingsButton.textContent = "Add Savings";
+
+                            // Refresh goal amounts and transaction history.
+                            loadGoals();
+                            loadTransactions();
+                        })
+                        .withFailureHandler(error => {
+                            alert(
+                                error.message ||
+                                "Could not add savings."
+                            );
+
+                            savingsButton.disabled = false;
+                            savingsButton.textContent = "Add Savings";
+                        })
+                        .addSavings(goal.id, amount);
+                });
+
+
+                savingsControls.append(
+                    savingsInput,
+                    savingsButton
+                );
+
+                card.appendChild(savingsControls);
+
+
+                // DELETE GOAL
+                const deleteButton = document.createElement("button");
+
+                deleteButton.type = "button";
+                deleteButton.textContent = "Delete Goal";
+                deleteButton.className = "delete-button";
+
+
+                deleteButton.addEventListener("click", () => {
+                    const confirmed = confirm(
+                        'Delete "' + goal.name +
+                        '"? This will permanently remove this goal ' +
+                        "and its savings record."
+                    );
+
+
+                    if (!confirmed) {
+                        return;
+                    }
+
+
+                    deleteButton.disabled = true;
+                    deleteButton.textContent = "Deleting...";
+
+
+                    google.script.run
+                        .withSuccessHandler(result => {
+                            alert(
+                                result.message ||
+                                "Savings goal deleted successfully."
+                            );
+
+                            loadGoals();
+                        })
+                        .withFailureHandler(error => {
+                            alert(
+                                error.message ||
+                                "Could not delete this goal."
+                            );
+
+                            deleteButton.disabled = false;
+                            deleteButton.textContent = "Delete Goal";
+                        })
+                        .deleteGoal(goal.id);
+                });
+
+
+                card.appendChild(deleteButton);
+                list.appendChild(card);
+
+            });
+        }
+
+        // ============================
+        // TRANSACTION HISTORY
+        // ============================
+
+        function loadTransactions() {
+            const container =
+                document.getElementById("transactionsList");
+
+            const refreshButton =
+                document.getElementById("refreshTransactionsButton");
+
+            container.textContent = "Loading transaction history...";
+            refreshButton.disabled = true;
+            refreshButton.textContent = "Loading...";
+
+            google.script.run
+                .withSuccessHandler(renderTransactions)
+                .withFailureHandler(error => {
+                    container.textContent =
+                        "Could not load transactions: " +
+                        ((error && error.message) || "Unknown error");
+
+                    refreshButton.disabled = false;
+                    refreshButton.textContent = "Refresh History";
+                })
+                .getTransactions();
+        }
+
+
+        function renderTransactions(transactions) {
+            const container =
+                document.getElementById("transactionsList");
+
+            const refreshButton =
+                document.getElementById("refreshTransactionsButton");
+
+            refreshButton.disabled = false;
+            refreshButton.textContent = "Refresh History";
+            container.replaceChildren();
+
+            if (
+                !Array.isArray(transactions) ||
+                transactions.length === 0
+            ) {
+                const empty = document.createElement("p");
+
+                empty.className = "transaction-empty";
+
+                empty.textContent =
+                    "No transactions yet. Add savings to a goal to see your deposits here.";
+
+                container.appendChild(empty);
+                return;
+            }
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "transaction-table-wrapper";
+
+            const table = document.createElement("table");
+            table.className = "transaction-table";
+
+            const thead = document.createElement("thead");
+            const headerRow = document.createElement("tr");
+
+            [
+                "Goal Name",
+                "Amount",
+                "Transaction Date",
+                "Transaction ID"
+            ].forEach(label => {
+                const th = document.createElement("th");
+                th.textContent = label;
+                headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement("tbody");
+
+            transactions.forEach(transaction => {
+                const row = document.createElement("tr");
+
+                const goalCell = document.createElement("td");
+                goalCell.textContent =
+                    transaction.goalName || "Unnamed goal";
+
+                const amountCell = document.createElement("td");
+                amountCell.className = "transaction-amount";
+                amountCell.textContent =
+                    "+" + money(transaction.amount);
+
+                const dateCell = document.createElement("td");
+                dateCell.textContent =
+                    transaction.transactionDate || "Date unavailable";
+
+                const idCell = document.createElement("td");
+                idCell.className = "transaction-id";
+                idCell.textContent =
+                    transaction.transactionId || "—";
+
+                idCell.title = transaction.transactionId || "";
+
+                row.append(
+                    goalCell,
+                    amountCell,
+                    dateCell,
+                    idCell
+                );
+
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+            wrapper.appendChild(table);
+            container.appendChild(wrapper);
+        }
+
+
+        // Refresh transaction history when clicked.
+        document
+            .getElementById("refreshTransactionsButton")
+            .addEventListener("click", loadTransactions);
+
+
+        // ============================
+        // CREATE NEW GOAL
+        // ============================
+
+        document.getElementById("goalForm").addEventListener(
+            "submit",
+            event => {
+                event.preventDefault();
+
+                const button =
+                    document.getElementById("submitButton");
+
+                button.disabled = true;
+                button.textContent = "Creating...";
+
+                showMessage("Saving your goal...", false);
+
+
+                const goal = {
+                    name: document.getElementById("name").value.trim(),
+
+                    targetAmount:
+                        document.getElementById("targetAmount").value,
+
+                    initialSavings:
+                        document.getElementById("initialSavings").value || 0,
+
+                    deadline:
+                        document.getElementById("deadline").value,
+
+                    email:
+                        document.getElementById("email").value.trim(),
+
+                    purpose:
+                        document.getElementById("purpose").value.trim()
+                };
+
+
+                google.script.run
+                    .withSuccessHandler(result => {
+                        showMessage(
+                            result.message || "Goal created successfully.",
+                            false
+                        );
+
+                        document.getElementById("goalForm").reset();
+
+                        button.disabled = false;
+                        button.textContent = "Create Goal";
+
+                        loadGoals();
+                    })
+                    .withFailureHandler(error => {
+                        showMessage(
+                            error.message || "Something went wrong.",
+                            true
+                        );
+
+                        button.disabled = false;
+                        button.textContent = "Create Goal";
+                    })
+                    .addGoal(goal);
+            }
+        );
+
+
+        // Load dashboard data when the page opens.
+        loadGoals();
+        loadTransactions();
+
+    </script>
+
+</body>
+
+</html>
