@@ -1,5 +1,4 @@
-# Project Link : https://saveiq.vercel.app/
-
+# Project Link : https://script.google.com/macros/s/AKfycbzmyu0GAiLvyyFb5jIDn0SkyFXURHKPDupMIdN6et5pRb3QldHPYy8cCvENHc4Cew90Tg/exec
 # SaveIQ – AI Savings Goal Tracker 💰
 
 **Save smarter. Track better. Achieve your financial goals.**
